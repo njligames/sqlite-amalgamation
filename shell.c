@@ -1,3 +1,5 @@
+#include "android_file.h"
+
 /*
 ** 2001 September 15
 **
@@ -32,7 +34,7 @@
 #endif
 
 /*
-** Enable large-file support for fopen() and friends on unix.
+** Enable large-file support for mobile__fopen() and friends on unix.
 */
 #ifndef SQLITE_DISABLE_LFS
 # define _LARGE_FILE       1
@@ -2378,7 +2380,7 @@ static void displayLinuxIoStats(FILE *out){
   FILE *in;
   char z[200];
   sqlite3_snprintf(sizeof(z), z, "/proc/%d/io", getpid());
-  in = fopen(z, "rb");
+  in = mobile__fopen(z, "rb");
   if( in==0 ) return;
   while( fgets(z, sizeof(z), in)!=0 ){
     static const struct {
@@ -3359,7 +3361,7 @@ static int process_input(ShellState *p, FILE *in);
 ** is undefined in this case.
 */
 static char *readFile(const char *zName, int *pnByte){
-  FILE *in = fopen(zName, "rb");
+  FILE *in = mobile__fopen(zName, "rb");
   long nIn;
   size_t nRead;
   char *pBuf;
@@ -3420,7 +3422,7 @@ static void writefileFunc(
   UNUSED_PARAMETER(argc);
   zFile = (const char*)sqlite3_value_text(argv[0]);
   if( zFile==0 ) return;
-  out = fopen(zFile, "wb");
+  out = mobile__fopen(zFile, "wb");
   if( out==0 ) return;
   z = (const char*)sqlite3_value_blob(argv[1]);
   if( z==0 ){
@@ -3684,7 +3686,7 @@ static FILE *output_file_open(const char *zFile){
   }else if( strcmp(zFile, "off")==0 ){
     f = 0;
   }else{
-    f = fopen(zFile, "wb");
+    f = mobile__fopen(zFile, "wb");
     if( f==0 ){
       utf8_printf(stderr, "Error: cannot open \"%s\"\n", zFile);
     }
@@ -5068,7 +5070,7 @@ static int do_meta_command(char *zLine, ShellState *p){
       xCloser = pclose;
 #endif
     }else{
-      sCtx.in = fopen(sCtx.zFile, "rb");
+      sCtx.in = mobile__fopen(sCtx.zFile, "rb");
       xCloser = fclose;
     }
     if( p->mode==MODE_Ascii ){
@@ -5286,7 +5288,7 @@ static int do_meta_command(char *zLine, ShellState *p){
       sqlite3IoTrace = iotracePrintf;
       iotrace = stdout;
     }else{
-      iotrace = fopen(azArg[1], "w");
+      iotrace = mobile__fopen(azArg[1], "w");
       if( iotrace==0 ){
         utf8_printf(stderr, "Error: cannot open \"%s\"\n", azArg[1]);
         sqlite3IoTrace = 0;
@@ -5568,7 +5570,7 @@ static int do_meta_command(char *zLine, ShellState *p){
       rc = 1;
       goto meta_command_exit;
     }
-    alt = fopen(azArg[1], "rb");
+    alt = mobile__fopen(azArg[1], "rb");
     if( alt==0 ){
       utf8_printf(stderr,"Error: cannot open \"%s\"\n", azArg[1]);
       rc = 1;
@@ -5780,7 +5782,7 @@ static int do_meta_command(char *zLine, ShellState *p){
       FILE *out = 0;
       if( nCmd!=2 ) goto session_syntax_error;
       if( pSession->p==0 ) goto session_not_open;
-      out = fopen(azCmd[1], "wb");
+      out = mobile__fopen(azCmd[1], "wb");
       if( out==0 ){
         utf8_printf(stderr, "ERROR: cannot open \"%s\" for writing\n", azCmd[1]);
       }else{
@@ -7005,7 +7007,7 @@ static void process_sqliterc(
     zBuf = sqlite3_mprintf("%s/.sqliterc",home_dir);
     sqliterc = zBuf;
   }
-  in = fopen(sqliterc,"rb");
+  in = mobile__fopen(sqliterc,"rb");
   if( in ){
     if( stdin_is_interactive ){
       utf8_printf(stderr,"-- Loading resources from %s\n",sqliterc);

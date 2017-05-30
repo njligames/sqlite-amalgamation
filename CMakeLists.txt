@@ -65,7 +65,9 @@ if(BUILD_ENABLE_RTREE)
 endif()
 
 # sqlite3 as library
-add_library(sqlite3 sqlite3.c)
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. )
+set(android_file ${CMAKE_CURRENT_SOURCE_DIR}/../android_file.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../android_file.h)
+add_library(sqlite3 sqlite3.c ${android_file})
 if(IS_LINUX)
     if(BUILD_SHARED_LIBS)
         target_link_libraries(sqlite3 pthread dl)
@@ -77,7 +79,7 @@ endif()
 
 # shell app
 if(BUILD_SHELL)
-    add_executable(sqlite3_shell shell.c)
+    add_executable(sqlite3_shell shell.c ${android_file})
     target_link_libraries(sqlite3_shell sqlite3)
     set_target_properties(sqlite3_shell PROPERTIES OUTPUT_NAME sqlite3)
 
