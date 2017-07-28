@@ -1,3 +1,5 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5.1)
+
 project(sqlite3)
 cmake_minimum_required(VERSION 3.0)
 string(REGEX MATCH "Clang"  IS_CLANG "${CMAKE_CXX_COMPILER_ID}")
